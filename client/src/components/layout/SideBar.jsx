@@ -1,18 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import HistoryIcon from "@mui/icons-material/History";
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 const sidebarItems = [
     { name: "Dashboard", path: "/", icon: DashboardIcon },
+    { name: "Transactions", path: "/transactions", icon: ReceiptLongIcon },
     { name: "Reports", path: "/reports", icon: HistoryIcon },
+
 ];
 
 function SideBar({ open }) {
     const location = useLocation();
 
     return (
-        <div className={`bg-white h-full shadow-lg transition-all duration-300 ${open ? "w-64" : "w-16"} overflow-hidden`}>
-            <div className="p-4 text-xl font-bold text-center border-b">💰</div>
+        <div className={`bg-white h-full shadow-lg transition-all duration-300 ${open ? "w-72" : "w-20"} overflow-hidden`}>
+            <div className="flex items-center justify-center h-16 border-b">
+                <div className="text-xl font-bold text-center">💰</div>
+                {open && <div className="p-3 text-xl font-bold text-center">Budget_Tracker</div>}
+            </div>
             <ul className="mt-4 m-2">
                 {sidebarItems.map(({ name, path, icon: Icon }) => {
                     const isActive = location.pathname === path;

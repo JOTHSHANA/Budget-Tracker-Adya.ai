@@ -6,11 +6,11 @@ function AppLayout({ children }) {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     return (
-        <div className="h-screen w-screen flex flex-col box-sizing-border">
+        <div className="h-screen w-screen box-sizing-border fixed">
             <TopBar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-            <div className="flex flex-1">
+            <div className="flex h-full">
                 <SideBar open={sidebarOpen} />
-                <div className="flex-1 bg-gray-100 p-6">
+                <div className=" w-full bg-gray-100 p-6 overflow-auto pb-20">
                     {children}
                 </div>
             </div>
