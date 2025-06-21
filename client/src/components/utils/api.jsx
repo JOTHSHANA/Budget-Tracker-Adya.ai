@@ -1,2 +1,3 @@
-const apiHost = "http://localhost:5000"
+const apiHost = import.meta.env.VITE_BACKEND_URL
+
 export default apiHost;
