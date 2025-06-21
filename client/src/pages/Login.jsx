@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import apiHost from '../components/utils/api';
 
 function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -17,9 +18,9 @@ function Login() {
         e.preventDefault();
         setError('');
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', form);
+            const res = await axios.post(`${apiHost}/api/auth/login`, form);
             login(res.data);
-            navigate('/');
+            navigate('/budget-fix');
         } catch (err) {
             setError(err.response?.data?.message || 'Invalid credentials');
         }

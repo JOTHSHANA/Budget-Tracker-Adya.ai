@@ -6,6 +6,7 @@ import axios from "axios";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import apiHost from "../utils/api";
 import dayjs from "dayjs";
 
 const ExportButtons = ({ transactions, userToken }) => {
@@ -21,7 +22,7 @@ const ExportButtons = ({ transactions, userToken }) => {
 
             try {
                 const res = await axios.get(
-                    `http://localhost:5000/api/transactions/by-month?month=${selectedMonth}`,
+                    `${apiHost}/api/transactions/by-month?month=${selectedMonth}`,
                     {
                         headers: { Authorization: `Bearer ${userToken}` },
                     }

@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import DriveFileRenameOutlineSharpIcon from '@mui/icons-material/DriveFileRenameOutlineSharp';
 import DeleteSweepSharpIcon from '@mui/icons-material/DeleteSweepSharp';
 import AddToPhotosSharpIcon from '@mui/icons-material/AddToPhotosSharp';
-
+import apiHost from "../components/utils/api";
 const BudgetFix = () => {
     const { user } = useContext(AuthContext);
     const [popupOpen, setPopupOpen] = useState(false);
@@ -36,7 +36,7 @@ const BudgetFix = () => {
         try {
             if (editId) {
                 await axios.put(
-                    `http://localhost:5000/api/budget-category/${editId}`,
+                    `${apiHost}/api/budget-category/${editId}`,
                     {
                         category,
                         ...(type === "expense" && { percentage }),
@@ -48,7 +48,7 @@ const BudgetFix = () => {
                 alert("Category updated successfully");
             } else {
                 await axios.post(
-                    "http://localhost:5000/api/budget-category",
+                    `${apiHost}/api/budget-category`,
                     {
                         category,
                         type,
@@ -77,7 +77,7 @@ const BudgetFix = () => {
         if (!confirm) return;
 
         try {
-            await axios.delete(`http://localhost:5000/api/budget-category/${id}`, {
+            await axios.delete(`${apiHost}/api/budget-category/${id}`, {
                 headers: { Authorization: `Bearer ${user.token}` },
             });
             alert("Deleted successfully");
@@ -94,10 +94,10 @@ const BudgetFix = () => {
     const fetchAllCategories = async () => {
         try {
             const [incomeRes, expenseRes] = await Promise.all([
-                axios.get("http://localhost:5000/api/budget-category/income", {
+                axios.get(`${apiHost}/api/budget-category/income`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 }),
-                axios.get("http://localhost:5000/api/budget-category/expense", {
+                axios.get(`${apiHost}/api/budget-category/expense`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 }),
             ]);
@@ -354,7 +354,7 @@ const BudgetFix = () => {
                             {type === "expense" && (
                                 <input
                                     type="number"
-                                    placeholder="Percentage %"
+                                    placeholder="Max percentage use%"
                                     value={percentage}
                                     onChange={(e) => setPercentage(e.target.value)}
                                     className="w-full px-3 py-2 border rounded-5px"

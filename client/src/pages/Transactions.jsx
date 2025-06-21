@@ -25,7 +25,7 @@ const AddTransactionPage = () => {
 
     const fetchCategories = async (type) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/budget-category/${type}`, {
+            const res = await axios.get(`${apiHost}/api/budget-category/${type}`, {
                 headers: { Authorization: `Bearer ${user.token}` },
             });
             setCategories(res.data);
@@ -36,7 +36,7 @@ const AddTransactionPage = () => {
 
     const fetchTransactions = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/api/transactions", {
+            const res = await axios.get(`${apiHost}/api/transactions`, {
                 headers: { Authorization: `Bearer ${user.token}` },
             });
             setTransactions(res.data);
@@ -58,7 +58,7 @@ const AddTransactionPage = () => {
         e.preventDefault();
         try {
             await axios.post(
-                "http://localhost:5000/api/transactions",
+                `${apiHost}/api/transactions`,
                 {
                     ...form,
                     createdAt: new Date(form.date),
@@ -75,7 +75,7 @@ const AddTransactionPage = () => {
                 date: new Date().toISOString().split("T")[0],
             });
             fetchTransactions();
-            fetchViolations(); // Refresh budget violations after adding a transaction
+            fetchViolations();
         } catch (err) {
             console.error(err);
         }

@@ -21,6 +21,7 @@
     "@mui/x-date-pickers": "^8.5.3",
     "autoprefixer": "^10.4.20",
     "axios": "^1.10.0",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.25",

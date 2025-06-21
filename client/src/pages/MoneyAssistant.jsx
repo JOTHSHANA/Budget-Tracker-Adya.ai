@@ -1,6 +1,7 @@
 // src/pages/MoneyAssistant.jsx
 import React, { useState } from "react";
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
+import apiHost from "../components/utils/api";
 
 const MoneyAssistant = () => {
     const [messages, setMessages] = useState([
@@ -20,7 +21,7 @@ const MoneyAssistant = () => {
         setMessages((prev) => [...prev, loadingMsg]);
 
         try {
-            const res = await fetch("http://localhost:5000/api/ai/chat", {
+            const res = await fetch(`${apiHost}/api/ai/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: input })

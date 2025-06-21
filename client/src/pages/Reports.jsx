@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import TransactionTable from "../components/dashboard/TransactionTable";
 import ExportButtons from "../components/reports/ExportButtons";
+import apiHost from "../components/utils/api";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#8dd1e1", "#a78bfa", "#facc15"];
 
@@ -31,7 +32,7 @@ const Reports = () => {
     useEffect(() => {
         const fetchAllTransactions = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/transactions", {
+                const res = await axios.get(`${apiHost}/api/transactions`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 });
                 setAllTransactions(res.data);
@@ -47,7 +48,7 @@ const Reports = () => {
     useEffect(() => {
         const fetchExpenses = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/transactions/expense", {
+                const res = await axios.get(`${apiHost}/api/transactions/expense`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 });
                 setExpenseTransactions(res.data);
@@ -63,7 +64,7 @@ const Reports = () => {
     useEffect(() => {
         const fetchIncome = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/transactions/income", {
+                const res = await axios.get(`${apiHost}/api/transactions/income`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 });
                 setIncomeTransactions(res.data);

@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import apiHost from "../../components/utils/api";
 
 import CategoryCharts from "../../components/dashboard/CategoryCharts";
 import SummaryCards from "../../components/dashboard/SummaryCards";
@@ -37,9 +38,9 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                let url = "http://localhost:5000/api/transactions";
+                let url = `${apiHost}/api/transactions`;
                 if (selectedMonth !== "All") {
-                    url = `http://localhost:5000/api/transactions/by-month?month=${selectedMonth}`;
+                    url = `${apiHost}/api/transactions/by-month?month=${selectedMonth}`;
                 }
 
                 const res = await axios.get(url, {
@@ -58,7 +59,7 @@ const Dashboard = () => {
         const fetchYearlySummary = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:5000/api/transactions/yearly-summary?year=${selectedYear}`,
+                    `${apiHost}/api/transactions/yearly-summary?year=${selectedYear}`,
                     { headers: { Authorization: `Bearer ${user.token}` } }
                 );
                 setYearlySummary(res.data);
@@ -73,7 +74,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchExpenseCategories = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/budget-category/expense", {
+                const res = await axios.get(`${apiHost}/api/budget-category/expense`, {
                     headers: { Authorization: `Bearer ${user.token}` },
                 });
                 setExpenseCategories(res.data);
@@ -89,7 +90,7 @@ const Dashboard = () => {
         e.preventDefault();
         try {
             await axios.post(
-                "http://localhost:5000/api/transactions",
+                `${apiHost}/api/transactions`,
                 { ...form, createdAt: new Date(form.date) },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
@@ -106,8 +107,8 @@ const Dashboard = () => {
             // Refresh transactions
             const url =
                 selectedMonth === "All"
-                    ? "http://localhost:5000/api/transactions"
-                    : `http://localhost:5000/api/transactions/by-month?month=${selectedMonth}`;
+                    ? `${apiHost}/api/transactions`
+                    : `${apiHost}/api/transactions/by-month?month=${selectedMonth}`;
             const res = await axios.get(url, {
                 headers: { Authorization: `Bearer ${user.token}` },
             });
