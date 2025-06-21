@@ -3,6 +3,8 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import HistoryIcon from "@mui/icons-material/History";
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import GpsFixedSharpIcon from '@mui/icons-material/GpsFixedSharp';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+
 
 const sidebarItems = [
     { name: "Dashboard", path: "/", icon: DashboardIcon },
@@ -10,7 +12,7 @@ const sidebarItems = [
     { name: "Transactions", path: "/transactions", icon: ReceiptLongIcon },
     { name: "Reports", path: "/reports", icon: HistoryIcon },
     { name: "Money Assistant", path: "/assistant", icon: GpsFixedSharpIcon },
-
+    { name: "AI Recommandations", path: "/ai-recommandations", icon: SettingsSuggestIcon },
 
 ];
 

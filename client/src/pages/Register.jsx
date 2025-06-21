@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import apiHost from '../components/utils/api';
 
 function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '' });

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import TransactionForm from "../components/Transactions/TransactionForm";
 import TransactionsTable from "../components/Transactions/TransactionsTable";
 import { BudgetAlertContext } from "../context/BudgetAlertContext";
+import apiHost from "../components/utils/api";
 
 
 const AddTransactionPage = () => {

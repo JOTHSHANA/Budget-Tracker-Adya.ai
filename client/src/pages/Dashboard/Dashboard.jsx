@@ -69,7 +69,7 @@ const Dashboard = () => {
         };
 
         fetchYearlySummary();
-    }, [selectedYear, user.token]);
+    }, [selectedYear, user.token, selectedMonth, transactions]);
 
     useEffect(() => {
         const fetchExpenseCategories = async () => {
@@ -103,6 +103,7 @@ const Dashboard = () => {
             });
             setFormOpen(false);
             fetchViolations();
+
 
             // Refresh transactions
             const url =

@@ -9,6 +9,7 @@ import AddTransactionForm from './pages/Transactions';
 import { useEffect, useState, useContext } from "react";
 import BudgetFix from './pages/BudgetFix';
 import MoneyAssistant from "./pages/MoneyAssistant";
+import AIRecommandations from "./pages/AIRecommandations";
 
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
         <Route path="/transactions" element={<AppLayout><AddTransactionForm /></AppLayout>} />
         <Route path="/budget-fix" element={<AppLayout><BudgetFix /></AppLayout>} />
         <Route path="/assistant" element={<AppLayout><MoneyAssistant /></AppLayout>} />
+        <Route path="/ai-recommandations" element={<AppLayout><AIRecommandations /></AppLayout>} />
+        {/* Add more routes as needed */}
       </Routes>
     </Router>
   );
