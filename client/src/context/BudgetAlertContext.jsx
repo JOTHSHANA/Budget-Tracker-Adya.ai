@@ -13,7 +13,7 @@ export const BudgetAlertProvider = ({ children }) => {
     const fetchViolations = async () => {
         if (!user) return;
         try {
-            const res = await axios.get(`{apiHost}/api/alerts/budget-check`, {
+            const res = await axios.get(`${apiHost}/api/alerts/budget-check`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setViolations(res.data.violations || []);
