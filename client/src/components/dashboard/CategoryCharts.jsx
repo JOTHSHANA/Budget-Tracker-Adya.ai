@@ -13,7 +13,7 @@ import {
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#8dd1e1"];
 
 const CategoryCharts = ({ data }) => (
-    <div className="bg-white p-6 rounded-xl shadow-md">
+    <div className="bg-white p-6 rounded-5px shadow-custom">
         <h3 className="text-xl font-semibold mb-4 border-b pb-2">
             Expense by Category
         </h3>

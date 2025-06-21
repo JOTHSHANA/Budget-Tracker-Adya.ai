@@ -17,4 +17,4 @@ router.get("/yearly-summary", protect, getYearlySummary);
 router.get("/income", protect, getIncomeTransactions);
 router.get("/expense", protect, getExpenseTransactions);
 
-module.exports = router;
+module.exports = router; 

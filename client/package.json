@@ -22,12 +22,15 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.10.0",
     "dayjs": "^1.11.13",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.25",
     "postcss": "^8.4.49",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "recharts": "^2.15.3",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

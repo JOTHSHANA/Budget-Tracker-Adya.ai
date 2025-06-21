@@ -20,7 +20,7 @@ const TransactionTable = ({ transactions }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 3, borderRadius: 2 }}>
+    <Paper elevation={3} sx={{ padding: 3, borderRadius: 1 , height:"100%"}} className="shadow-custom">
       <Typography variant="h6" sx={{ fontWeight: 600, marginBottom: 2 }}>
         Recent Transactions
       </Typography>

@@ -1,5 +1,4 @@
 // src/pages/Reports.jsx
-
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
@@ -17,6 +16,8 @@ import {
     Cell,
     Legend
 } from "recharts";
+import TransactionTable from "../components/dashboard/TransactionTable";
+import ExportButtons from "../components/reports/ExportButtons";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#8dd1e1", "#a78bfa", "#facc15"];
 
@@ -24,8 +25,9 @@ const Reports = () => {
     const { user } = useContext(AuthContext);
     const [allTransactions, setAllTransactions] = useState([]);
     const [expenseTransactions, setExpenseTransactions] = useState([]);
+    const [incomeTransactions, setIncomeTransactions] = useState([]);
 
-    // Fetch all transactions (for line chart)
+    // 1. All Transactions - For Monthly Line Chart
     useEffect(() => {
         const fetchAllTransactions = async () => {
             try {
@@ -41,7 +43,7 @@ const Reports = () => {
         fetchAllTransactions();
     }, [user.token]);
 
-    // Fetch only expense transactions (for category-wise charts)
+    // 2. Expense Transactions - For Expense Charts
     useEffect(() => {
         const fetchExpenses = async () => {
             try {
@@ -57,7 +59,23 @@ const Reports = () => {
         fetchExpenses();
     }, [user.token]);
 
-    // Monthly Income vs Expense
+    // 3. Income Transactions - For Category-wise Income Chart
+    useEffect(() => {
+        const fetchIncome = async () => {
+            try {
+                const res = await axios.get("http://localhost:5000/api/transactions/income", {
+                    headers: { Authorization: `Bearer ${user.token}` },
+                });
+                setIncomeTransactions(res.data);
+            } catch (err) {
+                console.error("Error fetching income transactions:", err);
+            }
+        };
+
+        fetchIncome();
+    }, [user.token]);
+
+    // Monthly Line Chart Data
     const monthlySummary = {};
     allTransactions.forEach((tx) => {
         const month = new Date(tx.createdAt).toLocaleString("default", {
@@ -77,26 +95,40 @@ const Reports = () => {
         expense: monthlySummary[month].expense,
     }));
 
-    // Category-wise Expense Summary
-    const categorySummary = {};
+    // Category-wise Expense Data
+    const categoryExpenseSummary = {};
     expenseTransactions.forEach((tx) => {
-        if (!categorySummary[tx.category]) {
-            categorySummary[tx.category] = 0;
+        if (!categoryExpenseSummary[tx.category]) {
+            categoryExpenseSummary[tx.category] = 0;
         }
-        categorySummary[tx.category] += tx.amount;
+        categoryExpenseSummary[tx.category] += tx.amount;
     });
 
-    const categoryData = Object.keys(categorySummary).map((category) => ({
+    const categoryExpenseData = Object.keys(categoryExpenseSummary).map((category) => ({
         name: category,
-        value: categorySummary[category],
+        value: categoryExpenseSummary[category],
+    }));
+
+    // Category-wise Income Data
+    const categoryIncomeSummary = {};
+    incomeTransactions.forEach((tx) => {
+        if (!categoryIncomeSummary[tx.category]) {
+            categoryIncomeSummary[tx.category] = 0;
+        }
+        categoryIncomeSummary[tx.category] += tx.amount;
+    });
+
+    const categoryIncomeData = Object.keys(categoryIncomeSummary).map((category) => ({
+        name: category,
+        value: categoryIncomeSummary[category],
     }));
 
     return (
         <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Reports</h2>
+             <h2 className="text-xl sm:text-2xl font-bold mb-4">Reports</h2>
 
-            {/* Monthly Income vs Expense Line Chart */}
-            <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
+            {/* Line Chart - Monthly Income vs Expense */}
+            <div className="mb-4 bg-white p-6 rounded-5px shadow-custom">
                 <h3 className="text-xl font-semibold mb-2">Monthly Income vs Expense</h3>
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={lineChartData}>
@@ -104,32 +136,21 @@ const Reports = () => {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Line
-                            type="monotone"
-                            dataKey="income"
-                            stroke="#4ade80"
-                            strokeWidth={2}
-                            name="Income"
-                        />
-                        <Line
-                            type="monotone"
-                            dataKey="expense"
-                            stroke="#f87171"
-                            strokeWidth={2}
-                            name="Expense"
-                        />
+                        <Line type="monotone" dataKey="income" stroke="#4ade80" strokeWidth={2} name="Income" />
+                        <Line type="monotone" dataKey="expense" stroke="#f87171" strokeWidth={2} name="Expense" />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
 
-            {/* Category-wise Expense Report */}
-            <div className="flex flex-col md:flex-row gap-8">
-                <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+            {/* Category-wise Expense and Income Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {/* Expense Pie Chart */}
+                <div className="bg-white p-6 rounded-5px shadow-custom">
                     <h3 className="text-xl font-semibold mb-4">Expense Distribution by Category</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart>
                             <Pie
-                                data={categoryData}
+                                data={categoryExpenseData}
                                 dataKey="value"
                                 nameKey="name"
                                 cx="50%"
@@ -137,11 +158,8 @@ const Reports = () => {
                                 outerRadius={100}
                                 label
                             >
-                                {categoryData.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={COLORS[index % COLORS.length]}
-                                    />
+                                {categoryExpenseData.map((entry, index) => (
+                                    <Cell key={`cell-exp-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>
                             <Tooltip />
@@ -150,28 +168,41 @@ const Reports = () => {
                     </ResponsiveContainer>
                 </div>
 
-                <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+                {/* Category-wise Expense Bar Chart */}
+                <div className="bg-white p-6 rounded-5px shadow-custom">
                     <h3 className="text-xl font-semibold mb-4">Category-wise Expense Comparison</h3>
                     <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={categoryData}>
+                        <BarChart data={categoryExpenseData}>
                             <XAxis dataKey="name" />
                             <YAxis />
                             <Tooltip />
-                            <Bar dataKey="value" fill="#60a5fa" name="Expense" />
+                            <Bar dataKey="value" fill="#f97316" name="Expense" />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
             </div>
 
-            {/* Export Buttons (Optional) */}
-            <div className="mt-6 flex gap-4">
-                <button className="bg-green-600 text-white px-4 py-2 rounded">
-                    Export as PDF
-                </button>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded">
-                    Download CSV
-                </button>
+            {/* Category-wise Income & Table side-by-side */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                <div className="bg-white p-6 rounded-5px shadow-custom">
+                    <h3 className="text-xl font-semibold mb-4">Category-wise Income Comparison</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={categoryIncomeData}>
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Bar dataKey="value" fill="#10b981" name="Income" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+
+                <div className="rounded-5px shadow-custom overflow-auto">
+                    <TransactionTable transactions={allTransactions} />
+                </div>
             </div>
+            <ExportButtons transactions={allTransactions} userToken={user.token} />
+
+
         </div>
     );
 };
