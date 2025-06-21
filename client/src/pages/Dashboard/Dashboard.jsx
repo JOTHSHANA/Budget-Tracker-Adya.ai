@@ -14,8 +14,10 @@ import MonthlySummary from "../../components/dashboard/MonthlySummary";
 import TransactionTable from "../../components/dashboard/TransactionTable";
 import TransactionFormModal from "../../components/dashboard/TransactionFormModal";
 import AddToPhotosSharpIcon from '@mui/icons-material/AddToPhotosSharp';
+import { BudgetAlertContext } from "../../context/BudgetAlertContext";
 
 const Dashboard = () => {
+    const { fetchViolations } = useContext(BudgetAlertContext);
     const [transactions, setTransactions] = useState([]);
     const [formOpen, setFormOpen] = useState(false);
     const [yearlySummary, setYearlySummary] = useState(null);
@@ -99,6 +101,7 @@ const Dashboard = () => {
                 date: new Date().toISOString().split("T")[0],
             });
             setFormOpen(false);
+            fetchViolations();
 
             // Refresh transactions
             const url =

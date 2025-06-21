@@ -12,8 +12,8 @@ import {
 
 const SummaryCards = ({ income, expense, balance, monthlyChartData }) => (
     <div className="bg-white p-6 rounded-5px shadow-custom">
-        <h3 className="text-xl font-semibold mb-4 border-b pb-2">TOTAL</h3>
-        <div className="grid sm:grid-cols-3 gap-4 mb-4">
+        <h3 className="text-xl font-semibold mb-4 border-b pb-2">OVERALL</h3>
+        <div className="grid sm:grid-cols-3 gap-4">
             <div className="bg-green-100 text-green-800 p-4 rounded-5px">
                 <h4>Total Income</h4>
                 <p className="text-xl font-bold">₹ {income}</p>

@@ -10,6 +10,7 @@ import { useEffect, useState, useContext } from "react";
 import BudgetFix from './pages/BudgetFix';
 import MoneyAssistant from "./pages/MoneyAssistant";
 
+
 function App() {
   return (
     <Router>

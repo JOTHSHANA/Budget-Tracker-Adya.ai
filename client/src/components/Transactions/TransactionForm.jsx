@@ -1,5 +1,6 @@
 import React from "react";
 
+
 const TransactionForm = ({ form, setForm, handleSubmit, categories, fetchCategories, navigate }) => {
     return (
         <div className="bg-white p-4 sm:p-6 rounded-5px shadow-custom w-full lg:max-w-md">

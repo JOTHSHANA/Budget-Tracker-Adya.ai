@@ -4,10 +4,13 @@ import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import TransactionForm from "../components/Transactions/TransactionForm";
 import TransactionsTable from "../components/Transactions/TransactionsTable";
+import { BudgetAlertContext } from "../context/BudgetAlertContext";
+
 
 const AddTransactionPage = () => {
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
+    const { fetchViolations } = useContext(BudgetAlertContext);
 
     const [form, setForm] = useState({
         type: "income",
@@ -72,6 +75,7 @@ const AddTransactionPage = () => {
                 date: new Date().toISOString().split("T")[0],
             });
             fetchTransactions();
+            fetchViolations(); // Refresh budget violations after adding a transaction
         } catch (err) {
             console.error(err);
         }
