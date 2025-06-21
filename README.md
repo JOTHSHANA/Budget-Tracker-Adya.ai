@@ -1,7 +1,10 @@
 # Developer Information
 Jothshana S M
+
 Computer Science & Engineering Student
+
 Passionate about fullstack development, product design, and impactful software!
+
 contact: jothshana123@gmail.com
 
 ## 💸 Budget Tracker Application – Fullstack Project (React + Node + MongoDB)
