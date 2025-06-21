@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
+import apiHost from "../utils/api";
 
 const TransactionFormModal = ({ form, setForm, onClose, onSubmit }) => {
     const { user } = useContext(AuthContext);
@@ -8,7 +9,7 @@ const TransactionFormModal = ({ form, setForm, onClose, onSubmit }) => {
 
     const fetchCategories = async (type) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/budget-category/${type}`, {
+            const res = await axios.get(`${apiHost}/api/budget-category/${type}`, {
                 headers: { Authorization: `Bearer ${user.token}` },
             });
             setCategories(res.data);

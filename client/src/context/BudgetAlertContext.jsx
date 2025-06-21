@@ -2,6 +2,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
+import apiHost from "../components/utils/api";
 
 export const BudgetAlertContext = createContext();
 
@@ -12,7 +13,7 @@ export const BudgetAlertProvider = ({ children }) => {
     const fetchViolations = async () => {
         if (!user) return;
         try {
-            const res = await axios.get("http://localhost:5000/api/alerts/budget-check", {
+            const res = await axios.get(`{apiHost}/api/alerts/budget-check`, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
             setViolations(res.data.violations || []);
