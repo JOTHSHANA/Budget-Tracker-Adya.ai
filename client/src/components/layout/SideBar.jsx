@@ -22,11 +22,13 @@ function SideBar({ open }) {
     return (
         <div
             className={`
-    bg-white h-full shadow-custom transition-all duration-300
-    ${open ? "w-72" : "w-0 md:w-[70px]"} 
-    overflow-hidden z-10
-  `}
-        >            <div className="flex items-center justify-center h-16 border-b">
+                bg-white h-full shadow-custom transition-all duration-300
+                ${open ? "w-72" : "w-0 md:w-[70px]"} 
+                overflow-hidden z-20
+                fixed md:static top-0 left-0
+            `}
+        >
+            <div className="flex items-center justify-center h-16 border-b">
                 <div className="text-xl font-bold text-center">💰</div>
                 {open && (
                     <div className="p-3 text-xl font-bold text-center hidden sm:block">
@@ -39,7 +41,13 @@ function SideBar({ open }) {
                 {sidebarItems.map(({ name, path, icon: Icon }) => {
                     const isActive = location.pathname === path;
                     return (
-                        <li key={path} className={`${isActive ? "bg-blue-100 text-blue-600" : "text-gray-700"} hover:bg-blue-50 rounded-5px`}>
+                        <li
+                            key={path}
+                            className={`${isActive
+                                    ? "bg-blue-100 text-blue-600"
+                                    : "text-gray-700"
+                                } hover:bg-blue-50 rounded-md`}
+                        >
                             <Link to={path} className="flex items-center p-3 space-x-3">
                                 <Icon className="text-xl" />
                                 {open && <span className="text-sm font-medium">{name}</span>}
@@ -51,6 +59,4 @@ function SideBar({ open }) {
         </div>
     );
 }
-
-export default SideBar;
-
+export default SideBar

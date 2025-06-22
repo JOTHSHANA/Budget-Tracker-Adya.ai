@@ -8,15 +8,20 @@ const budgetCategoryRoutes = require("./routes/budgetCategoryRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const alertRoutes = require("./routes/alertRoutes");
 
-
 dotenv.config();
 connectDB();
 
 const app = express();
+
+// ✅ Allow both production and local development origins
 app.use(cors({
-    origin: 'https://budget-tracker-adyaai.netlify.app',
+    origin: [
+        'https://budget-tracker-adyaai.netlify.app',
+        'http://localhost:5173'
+    ],
     credentials: true
 }));
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
@@ -25,11 +30,9 @@ app.use("/api/budget-category", budgetCategoryRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/alerts", alertRoutes);
 
-
 app.get('/', (req, res) => {
     res.send('API running...');
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

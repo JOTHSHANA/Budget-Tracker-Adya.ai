@@ -126,7 +126,7 @@ const Reports = () => {
 
     return (
         <div className="p-4">
-             <h2 className="text-xl sm:text-2xl font-bold mb-4">Reports</h2>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Reports</h2>
 
             {/* Line Chart - Monthly Income vs Expense */}
             <div className="mb-4 bg-white p-6 rounded-5px shadow-custom">

@@ -104,7 +104,7 @@ const Dashboard = () => {
             setFormOpen(false);
             fetchViolations();
 
-            
+
 
             // Refresh transactions
             const url =
@@ -150,7 +150,7 @@ const Dashboard = () => {
             <div className="max-w-7xl mx-auto w-full">
                 {/* Header Section */}
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-                    <h2 className="text-xl sm:text-2xl font-bold">Dashboard</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold mb-2">Dashboard</h2>
                     <div className="flex flex-col sm:flex-row gap-2">
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
