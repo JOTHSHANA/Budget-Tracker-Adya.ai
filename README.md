@@ -145,4 +145,19 @@ Welcome to the **Budget Tracker App**, a full-fledged web application designed t
 
 ---
 
+### Flow Chart
+```mermaid
+graph TD
+    A[Login / Register] --> B[Add Categories - Income / Expense]
+    B --> C[Add Transactions]
+    C --> D[Monitor Charts]
+    D --> E{Is Expense > Budget?}
+    E -- Yes --> F[Get Alert]
+    E -- No --> G[Download Reports - Date Wise]
+    D --> G
+    D --> H[Chat with AI - Gemini]
+    H --> I[AI Recommendations using NLP & Gemini]
+```
+
+
 
