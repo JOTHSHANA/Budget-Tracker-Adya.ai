@@ -14,7 +14,7 @@ connectDB();
 
 const app = express();
 app.use(cors({
-    origin: 'http://budget-tracker-adyaai.netlify.app',
+    origin: 'https://budget-tracker-adyaai.netlify.app',
     credentials: true
 }));
 app.use(express.json());
