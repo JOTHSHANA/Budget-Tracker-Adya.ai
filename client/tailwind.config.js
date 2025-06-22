@@ -13,7 +13,10 @@ export default {
                 custom: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
             }, borderRadius: {
                 '5px': '5px',
+            }, colors: {
+                'mint-green': '#39c184',
             },
+
         },
     },
     plugins: [],
