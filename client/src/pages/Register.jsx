@@ -20,7 +20,8 @@ function Register() {
     try {
       const res = await axios.post(`${apiHost}/api/auth/register`, form);
       login(res.data);
-      navigate('/');
+      localStorage.setItem("justRegistered", "true");
+      navigate('/budget-fix');
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
     }

@@ -16,12 +16,19 @@ import TransactionTable from "../../components/dashboard/TransactionTable";
 import TransactionFormModal from "../../components/dashboard/TransactionFormModal";
 import AddToPhotosSharpIcon from '@mui/icons-material/AddToPhotosSharp';
 import { BudgetAlertContext } from "../../context/BudgetAlertContext";
+import Loader from "../../components/Loader"; 
 
 const Dashboard = () => {
     const { fetchViolations } = useContext(BudgetAlertContext);
+    const { user } = useContext(AuthContext);
+
     const [transactions, setTransactions] = useState([]);
     const [formOpen, setFormOpen] = useState(false);
     const [yearlySummary, setYearlySummary] = useState(null);
+    const [expenseCategories, setExpenseCategories] = useState([]);
+    const [selectedMonth, setSelectedMonth] = useState(dayjs().format("YYYY-MM"));
+    const [loading, setLoading] = useState(true);
+
     const [form, setForm] = useState({
         type: "income",
         category: "",
@@ -29,62 +36,47 @@ const Dashboard = () => {
         note: "",
         date: new Date().toISOString().split("T")[0],
     });
-    const [selectedMonth, setSelectedMonth] = useState(dayjs().format("YYYY-MM"));
 
-    const [expenseCategories, setExpenseCategories] = useState([]);
-    const { user } = useContext(AuthContext);
     const selectedYear = "2025";
 
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            // Transactions
+            let txnUrl = selectedMonth === "All"
+                ? `${apiHost}/api/transactions`
+                : `${apiHost}/api/transactions/by-month?month=${selectedMonth}`;
+
+            const txnPromise = axios.get(txnUrl, {
+                headers: { Authorization: `Bearer ${user.token}` },
+            });
+
+            // Yearly Summary
+            const summaryPromise = axios.get(
+                `${apiHost}/api/transactions/yearly-summary?year=${selectedYear}`,
+                { headers: { Authorization: `Bearer ${user.token}` } }
+            );
+
+            // Expense Categories
+            const catPromise = axios.get(`${apiHost}/api/budget-category/expense`, {
+                headers: { Authorization: `Bearer ${user.token}` },
+            });
+
+            const [txnRes, summaryRes, catRes] = await Promise.all([txnPromise, summaryPromise, catPromise]);
+
+            setTransactions(txnRes.data);
+            setYearlySummary(summaryRes.data);
+            setExpenseCategories(catRes.data);
+        } catch (err) {
+            console.error("Error loading dashboard data", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                let url = `${apiHost}/api/transactions`;
-                if (selectedMonth !== "All") {
-                    url = `${apiHost}/api/transactions/by-month?month=${selectedMonth}`;
-                }
-
-                const res = await axios.get(url, {
-                    headers: { Authorization: `Bearer ${user.token}` },
-                });
-                setTransactions(res.data);
-            } catch (err) {
-                console.error("Error fetching transactions:", err);
-            }
-        };
-
         fetchData();
-    }, [selectedMonth, user.token]);
-
-    useEffect(() => {
-        const fetchYearlySummary = async () => {
-            try {
-                const res = await axios.get(
-                    `${apiHost}/api/transactions/yearly-summary?year=${selectedYear}`,
-                    { headers: { Authorization: `Bearer ${user.token}` } }
-                );
-                setYearlySummary(res.data);
-            } catch (err) {
-                console.error("Failed to fetch yearly summary", err);
-            }
-        };
-
-        fetchYearlySummary();
-    }, [selectedYear, user.token, selectedMonth, transactions]);
-
-    useEffect(() => {
-        const fetchExpenseCategories = async () => {
-            try {
-                const res = await axios.get(`${apiHost}/api/budget-category/expense`, {
-                    headers: { Authorization: `Bearer ${user.token}` },
-                });
-                setExpenseCategories(res.data);
-            } catch (err) {
-                console.error("Failed to fetch expense categories", err);
-            }
-        };
-
-        fetchExpenseCategories();
-    }, [user.token]);
+    }, [selectedMonth]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,6 +86,7 @@ const Dashboard = () => {
                 { ...form, createdAt: new Date(form.date) },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
+
             setForm({
                 type: "income",
                 category: "",
@@ -103,18 +96,7 @@ const Dashboard = () => {
             });
             setFormOpen(false);
             fetchViolations();
-
-
-
-            // Refresh transactions
-            const url =
-                selectedMonth === "All"
-                    ? `${apiHost}/api/transactions`
-                    : `${apiHost}/api/transactions/by-month?month=${selectedMonth}`;
-            const res = await axios.get(url, {
-                headers: { Authorization: `Bearer ${user.token}` },
-            });
-            setTransactions(res.data);
+            fetchData(); // Refresh everything
         } catch (err) {
             console.error(err);
         }
@@ -126,12 +108,10 @@ const Dashboard = () => {
     const expenseTxns = transactions.filter((tx) => tx.type === "expense");
     const chartMap = {};
 
-    // Start with all user-defined expense categories (0 value)
     expenseCategories.forEach((cat) => {
         chartMap[cat.category] = 0;
     });
 
-    // Add transaction values
     expenseTxns.forEach((tx) => {
         if (chartMap.hasOwnProperty(tx.category)) {
             chartMap[tx.category] += tx.amount;
@@ -144,6 +124,8 @@ const Dashboard = () => {
         name,
         value,
     }));
+
+    if (loading) return <Loader />;
 
     return (
         <div className="text-gray-800 px-4 sm:px-6 py-4">

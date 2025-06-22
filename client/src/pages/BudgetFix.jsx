@@ -7,6 +7,8 @@ import DriveFileRenameOutlineSharpIcon from '@mui/icons-material/DriveFileRename
 import DeleteSweepSharpIcon from '@mui/icons-material/DeleteSweepSharp';
 import AddToPhotosSharpIcon from '@mui/icons-material/AddToPhotosSharp';
 import apiHost from "../components/utils/api";
+import Loader from "../components/Loader";
+
 const BudgetFix = () => {
     const { user } = useContext(AuthContext);
     const [popupOpen, setPopupOpen] = useState(false);
@@ -16,15 +18,24 @@ const BudgetFix = () => {
     const [incomeCategories, setIncomeCategories] = useState([]);
     const [expenseCategories, setExpenseCategories] = useState([]);
     const [editId, setEditId] = useState(null);
-    // Pagination states
+    const [loadingIncome, setLoadingIncome] = useState(true);
+    const [loadingExpense, setLoadingExpense] = useState(true);
+    const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+
+
     const [incomePage, setIncomePage] = useState(0);
     const [incomeRowsPerPage, setIncomeRowsPerPage] = useState(5);
     const [expensePage, setExpensePage] = useState(0);
     const [expenseRowsPerPage, setExpenseRowsPerPage] = useState(5);
 
-    // Helper function to get paginated data
     const paginate = (data, page, rows) => data.slice(page * rows, page * rows + rows);
 
+    useEffect(() => {
+        if (localStorage.getItem("justRegistered") === "true") {
+            setShowWelcomePopup(true);
+            localStorage.removeItem("justRegistered"); // remove so it's shown only once
+        }
+    }, []);
 
 
     const handleAddCategory = async (e) => {
@@ -88,10 +99,9 @@ const BudgetFix = () => {
         }
     };
 
-
-
-
     const fetchAllCategories = async () => {
+        setLoadingIncome(true);
+        setLoadingExpense(true);
         try {
             const [incomeRes, expenseRes] = await Promise.all([
                 axios.get(`${apiHost}/api/budget-category/income`, {
@@ -105,6 +115,9 @@ const BudgetFix = () => {
             setExpenseCategories(expenseRes.data);
         } catch (err) {
             console.error("Error fetching categories", err);
+        } finally {
+            setLoadingIncome(false);
+            setLoadingExpense(false);
         }
     };
 
@@ -123,7 +136,6 @@ const BudgetFix = () => {
         }
     }, [popupOpen]);
 
-
     useEffect(() => {
         fetchAllCategories();
     }, []);
@@ -131,7 +143,6 @@ const BudgetFix = () => {
     return (
         <div className="bg-gray-100 px-4 py-6">
             <div className="max-w-6xl mx-auto w-full">
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
                     <h2 className="text-xl sm:text-2xl font-bold">Budget Categories</h2>
                     <button
@@ -142,12 +153,13 @@ const BudgetFix = () => {
                     </button>
                 </div>
 
-                {/* Tables */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                     {/* Income Categories */}
                     <div className="bg-white p-4 rounded-5px shadow-custom overflow-x-auto">
                         <h3 className="text-xl font-semibold mb-3">Income Categories</h3>
-                        {incomeCategories.length === 0 ? (
+                        {loadingIncome ? (
+                            <Loader />
+                        ) : incomeCategories.length === 0 ? (
                             <p className="text-gray-500">No categories found.</p>
                         ) : (
                             <>
@@ -188,8 +200,6 @@ const BudgetFix = () => {
                                         ))}
                                     </tbody>
                                 </table>
-
-                                {/* Pagination Controls */}
                                 <div className="flex justify-between items-center mt-3 text-sm">
                                     <div className="flex gap-2 items-center">
                                         <span>Rows per page:</span>
@@ -229,12 +239,12 @@ const BudgetFix = () => {
                         )}
                     </div>
 
-
                     {/* Expense Categories */}
-                    {/* Expense Categories Table */}
                     <div className="bg-white p-4 rounded-5px shadow-custom overflow-x-auto">
                         <h3 className="text-xl font-semibold mb-3">Expense Categories</h3>
-                        {expenseCategories.length === 0 ? (
+                        {loadingExpense ? (
+                            <Loader />
+                        ) : expenseCategories.length === 0 ? (
                             <p className="text-gray-500">No categories found.</p>
                         ) : (
                             <>
@@ -275,8 +285,6 @@ const BudgetFix = () => {
                                         ))}
                                     </tbody>
                                 </table>
-
-                                {/* Pagination Controls */}
                                 <div className="flex justify-between items-center mt-3 text-sm">
                                     <div className="flex gap-2 items-center">
                                         <span>Rows per page:</span>
@@ -315,7 +323,6 @@ const BudgetFix = () => {
                             </>
                         )}
                     </div>
-
                 </div>
             </div>
 
@@ -372,6 +379,34 @@ const BudgetFix = () => {
                     </div>
                 </div>
             )}
+
+
+            {showWelcomePopup && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4">
+                    <div className="bg-white p-6 rounded-5px shadow-custom w-full max-w-md relative">
+                        <button
+                            onClick={() => setShowWelcomePopup(false)}
+                            className="absolute top-2 right-3 text-xl font-bold text-gray-500"
+                        >
+                            &times;
+                        </button>
+                        <h3 className="text-lg font-bold mb-3">Welcome to Budget Tracker!</h3>
+                        <ul className="list-disc list-inside text-sm space-y-2">
+                            <li>This is where you define your income and expense categories.</li>
+                            <li>For expenses, assign a max usage percentage for alerts.</li>
+                            <li>Click “Add Category” to create new categories and proceed with the other pages.</li>
+                            <li>You can edit or delete categories anytime.</li>
+                        </ul>
+                        <button
+                            onClick={() => setShowWelcomePopup(false)}
+                            className="mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-5px font-bold"
+                        >
+                            Got it!
+                        </button>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
