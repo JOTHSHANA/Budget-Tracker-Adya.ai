@@ -104,6 +104,7 @@ const Dashboard = () => {
             setFormOpen(false);
             fetchViolations();
 
+            
 
             // Refresh transactions
             const url =
