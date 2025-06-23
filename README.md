@@ -8,6 +8,7 @@ Passionate about fullstack development, product design, and impactful software!
 contact: jothshana123@gmail.com
 
 ## 💸 Budget Tracker Application – Fullstack Project (React + Node + MongoDB)
+Deployed link: https://budget-tracker-adyaai.netlify.app/
 
 Welcome to the **Budget Tracker App**, a full-fledged web application designed to help users **track, analyze, and manage their income and expenses** effectively. Built using the **MERN stack** (MongoDB, Express.js, React.js, Node.js), it provides powerful features including:
 
